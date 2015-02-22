@@ -3,6 +3,7 @@
 #include "bcm2835_uart.h"
 #include "tgt_support.h"
 #include "atag.h"
+#include <libfdt.h>
 
 void puts(const char *str)
 {
@@ -38,9 +39,81 @@ puthex(uint32_t v)
 	puts(buf);
 }
 
-static void dump_dt(void *dtb)
+#define DUMP_DT_NODE_NAME(fdt, node)					\
+	do {								\
+		char tmp[128];						\
+		fdt_get_path((fdt), (node), tmp, sizeof(tmp));		\
+		puts(tmp);						\
+		puts("\n");						\
+	} while (0)
+
+static void hexdump(const uint8_t *buf, int len)
+{
+	static const char *hex[16] = {
+		"0", "1", "2", "3", "4", "5", "6", "7",
+		"8", "9", "a", "b", "c", "d", "e", "f",
+	};
+
+	while (len) {
+		puts(hex[*buf >> 4]);
+		puts(hex[*buf & 0xf]);
+		puts(" ");
+		buf++;
+		len--;
+	}
+}
+
+static void dump_dt_props(const void *fdt, int node)
+{
+	int ret;
+
+	ret = fdt_first_property_offset(fdt, node);
+	if (ret < 0)
+		return;
+
+	for (;;) {
+		const void *val;
+		const char *name;
+		int len;
+
+		val = fdt_getprop_by_offset(fdt, ret, &name, &len);
+		puts("\t");
+		puts(name);
+		puts(" (");
+		puthex(len);
+		puts("): ");
+		hexdump(val, len);
+		puts("\n");
+
+		ret = fdt_next_property_offset(fdt, ret);
+		if (ret < 0)
+			return;
+	}
+}
+
+static void dump_dt_node(void *fdt, int node)
+{
+	DUMP_DT_NODE_NAME(fdt, node);
+	dump_dt_props(fdt, node);
+
+	node = fdt_first_subnode(fdt, node);
+	if (node < 0)
+		return;
+
+	for (;;) {
+		dump_dt_node(fdt, node);
+
+		node = fdt_next_subnode(fdt, node);
+		if (node < 0)
+			return;
+	}
+}
+
+static void dump_dt(void *fdt)
 {
 	puts("DeviceTree detected\n");
+
+	dump_dt_node(fdt, fdt_path_offset(fdt, "/"));
 }
 
 #define DUMP_ATAG_VAL(name, val)					\
@@ -167,7 +240,6 @@ static void dump_atag(atag_header_t *h)
 		h = atag_next(h);
 	}
 }
-
 
 void main(uint32_t r0, uint32_t r1, uint32_t r2)
 {

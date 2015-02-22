@@ -3,7 +3,7 @@ ARMAS=/opt/armtc/usr/gnu/bin/gas
 ARMLD=/opt/armtc/usr/bin/ld
 ARMOBJCOPY=/opt/armtc/usr/gnu/bin/gobjcopy
 
-CFLAGS=-Wall -O2 -g -DDEBUG
+CFLAGS=-Wall -O2 -g -DDEBUG -Ilibfdt
 ARMCFLAGS=-ffreestanding -DTGT
 VERDEF=-DVERSION='"$(shell git describe --tags --dirty)"'
 
@@ -23,5 +23,6 @@ dtatag: main.c start.s bcm2835_uart.c
 		main.o \
 		bcm2835_uart.o \
 		tgt_support.o \
-		atag.o
+		atag.o \
+		libfdt/libfdt.a
 	$(ARMOBJCOPY) dtatag.elf -O binary $@
