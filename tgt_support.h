@@ -1,15 +1,20 @@
 #ifndef __TGT_SUPPORT_H
 #define __TGT_SUPPORT_H
 
+typedef uint32_t size_t;
+
 extern uint32_t arm_reg_read(uint32_t);
 extern void arm_reg_write(uint32_t, uint32_t);
 
 extern void memcpy(void *dst, const void *src, uint32_t len);
+extern void memmove(void *dst, const void *src, uint32_t len);
 extern void memset(void *dst, int val, uint32_t len);
+extern void *memchr(const void *s, int c, size_t n);
+extern int memcmp(const void *s1, const void *s2, size_t n);
 
-extern char * strstr(const char *as1, const char *as2);
-
-#define strlen	__builtin_strlen
+extern char *strstr(const char *as1, const char *as2);
+extern char *strchr(const char *s, int c);
+extern size_t strlen(const char *s);
 
 #define	BSWAP_32(x)	(((uint32_t)(x) << 24) | \
 			(((uint32_t)(x) << 8) & 0xff0000) | \
