@@ -17,9 +17,11 @@ dtatag: main.c start.s bcm2835_uart.c
 	$(ARMCC) $(CFLAGS) $(ARMCFLAGS) $(VERDEF) -c -o main.o main.c
 	$(ARMCC) $(CFLAGS) $(ARMCFLAGS) $(VERDEF) -c -o bcm2835_uart.o bcm2835_uart.c
 	$(ARMCC) $(CFLAGS) $(ARMCFLAGS) $(VERDEF) -c -o tgt_support.o tgt_support.c
+	$(ARMCC) $(CFLAGS) $(ARMCFLAGS) $(VERDEF) -c -o atag.o atag.c
 	$(ARMLD) -dy -b -znointerp -o dtatag.elf -e _start -M mapfile \
 		start.o \
 		main.o \
 		bcm2835_uart.o \
-		tgt_support.o
+		tgt_support.o \
+		atag.o
 	$(ARMOBJCOPY) dtatag.elf -O binary $@
