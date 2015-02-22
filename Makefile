@@ -12,7 +12,7 @@ all: dtatag
 clean:
 	rm -f dtatag
 
-dtatag: main.c start.s bcm2835_uart.c
+dtatag: main.c start.s bcm2835_uart.c tgt_support.c atag.c libfdt/libfdt.a
 	$(ARMCC) -x assembler-with-cpp -c -o start.o start.s
 	$(ARMCC) $(CFLAGS) $(ARMCFLAGS) $(VERDEF) -c -o main.o main.c
 	$(ARMCC) $(CFLAGS) $(ARMCFLAGS) $(VERDEF) -c -o bcm2835_uart.o bcm2835_uart.c
