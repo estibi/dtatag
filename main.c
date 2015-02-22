@@ -49,8 +49,19 @@ void write(void *buf, uint32_t len)
 	}
 }
 
+static void dump_dt(void *dtb)
+{
+	puts("DeviceTree detected\n");
+}
+
+static void dump_atag(void *atags)
+{
+	puts("ATAG detected\n");
+}
+
 void main(uint32_t r0, uint32_t r1, uint32_t r2)
 {
+	uint32_t *data = (uint32_t *)(uintptr_t)r2;
 	extern uint8_t _edata;
 	extern uint8_t _end;
 
@@ -59,8 +70,17 @@ void main(uint32_t r0, uint32_t r1, uint32_t r2)
 	bcm2835_uart_init();
 
 	puts("Welcome to DT-ATAG " VERSION "...\n");
+	puts("r2 = ");
+	puthex(r2);
+	puts("\n");
 
-brick:
+	if (data[0] == 0xedfe0dd0 /* 0xd00dfeed */)
+		dump_dt(data);
+	else if (data[1] == 0x54410001)
+		dump_atag(data);
+	else
+		puts("Unknown boot mode\n");
+
 	puts("Spinning forever!\n");
 	for (;;)
 		;
