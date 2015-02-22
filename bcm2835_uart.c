@@ -47,7 +47,6 @@
 #define	UART_CR_TXE		0x100		/* TX enable */
 #define	UART_CR_RXE		0x200		/* RX enable */
 
-#define	UART_CLK_STRING		"bcm2708.uart_clock="
 #define UART_DEFAULT_CLK	3000000
 #define UART_RATE		115200
 
