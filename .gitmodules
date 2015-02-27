@@ -1,0 +1,3 @@
+[submodule "libuart"]
+	path = libuart
+	url = https://github.com/jeffpc/libuart.git

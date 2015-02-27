@@ -1,8 +1,8 @@
 #include <inttypes.h>
 
-#include "uart.h"
 #include "tgt_support.h"
 #include "atag.h"
+#include "libuart/uart.h"
 #include <libfdt.h>
 
 void puts(const char *str)
@@ -10,7 +10,7 @@ void puts(const char *str)
 	const char *c = str;
 
 	while (*c != '\0')
-		bcm2835_uart_putc(*c++);
+		uart_putc(*c++);
 }
 
 static void
@@ -249,7 +249,7 @@ void main(uint32_t r0, uint32_t r1, uint32_t r2)
 
 	memset(&_edata, 0, &_end - &_edata);
 
-	bcm2835_uart_init();
+	uart_init();
 
 	puts("Welcome to DT-ATAG " VERSION "...\n");
 	puts("r2 = ");
