@@ -1,6 +1,6 @@
 #include <inttypes.h>
 
-#include "bcm2835_uart.h"
+#include "uart.h"
 #include "tgt_support.h"
 #include "atag.h"
 #include <libfdt.h>

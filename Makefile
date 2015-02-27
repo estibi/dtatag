@@ -12,16 +12,16 @@ all: dtatag
 clean:
 	rm -f dtatag
 
-dtatag: main.c start.s bcm2835_uart.c tgt_support.c atag.c libfdt/libfdt.a
+dtatag: main.c start.s uart.c tgt_support.c atag.c libfdt/libfdt.a
 	$(ARMCC) -x assembler-with-cpp -c -o start.o start.s
 	$(ARMCC) $(CFLAGS) $(ARMCFLAGS) $(VERDEF) -c -o main.o main.c
-	$(ARMCC) $(CFLAGS) $(ARMCFLAGS) $(VERDEF) -c -o bcm2835_uart.o bcm2835_uart.c
+	$(ARMCC) $(CFLAGS) $(ARMCFLAGS) $(VERDEF) -c -o uart.o uart.c
 	$(ARMCC) $(CFLAGS) $(ARMCFLAGS) $(VERDEF) -c -o tgt_support.o tgt_support.c
 	$(ARMCC) $(CFLAGS) $(ARMCFLAGS) $(VERDEF) -c -o atag.o atag.c
 	$(ARMLD) -dy -b -znointerp -o dtatag.elf -e _start -M mapfile \
 		start.o \
 		main.o \
-		bcm2835_uart.o \
+		uart.o \
 		tgt_support.o \
 		atag.o \
 		libfdt/libfdt.a
