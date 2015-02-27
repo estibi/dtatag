@@ -249,7 +249,7 @@ void main(uint32_t r0, uint32_t r1, uint32_t r2)
 
 	memset(&_edata, 0, &_end - &_edata);
 
-	uart_init();
+	uart_init(0);
 
 	puts("Welcome to DT-ATAG " VERSION "...\n");
 	puts("r2 = ");
